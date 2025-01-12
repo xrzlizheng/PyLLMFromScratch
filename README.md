@@ -127,15 +127,15 @@ train-llm-from-scratch/
 
 Clone the repository and navigate to the directory:
 ```bash
-git clone
-cd transformer_implementation
+git clone https://github.com/FareedKhan-dev/train-llm-from-scratch.git
+cd train-llm-from-scratch
 ```
 
 if you encounter any issues regarding the imports, make sure to change pythonpath to the root directory of the project:
 ```bash
-export PYTHONPATH="${PYTHONPATH}:/path/to/transformer_implementation"
+export PYTHONPATH="${PYTHONPATH}:/path/to/train-llm-from-scratch"
 
-# or if you are already in the transformer_implementation directory
+# or if you are already in the train-llm-from-scratch directory
 export PYTHONPATH="$PYTHONPATH:."
 ```
 
