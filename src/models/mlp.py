@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torch import Tensor
 
 class MLP(nn.Module):
     """
@@ -12,7 +13,7 @@ class MLP(nn.Module):
     Args:
         n_embed (int): The dimensionality of the input embedding.
     """
-    def __init__(self, n_embed):
+    def __init__(self, n_embed: int) -> None:
         """
         Initializes the MLP module.
 
@@ -24,7 +25,7 @@ class MLP(nn.Module):
         self.relu = nn.ReLU()                        # ReLU activation function
         self.proj = nn.Linear(4 * n_embed, n_embed)  # Linear layer to project back to original size
 
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         """
         Forward pass through the MLP.
 
@@ -39,7 +40,7 @@ class MLP(nn.Module):
         x = self.project_embedding(x)
         return x
 
-    def forward_embedding(self, x):
+    def forward_embedding(self, x: Tensor) -> Tensor:
         """
         Applies the hidden linear layer followed by ReLU activation.
 
@@ -52,7 +53,7 @@ class MLP(nn.Module):
         x = self.relu(self.hidden(x))
         return x
 
-    def project_embedding(self, x):
+    def project_embedding(self, x: Tensor) -> Tensor:
         """
         Applies the projection linear layer.
 

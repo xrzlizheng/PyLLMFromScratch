@@ -4,7 +4,7 @@ import argparse
 from config.config import default_config as config
 from src.models.transformer import Transformer  # Assuming your Transformer class is in this module
 
-def generate_text(model_path, input_text, max_new_tokens=100, device='cuda'):
+def generate_text(model_path: str, input_text: str, max_new_tokens: int = 100, device: str = 'cuda') -> str:
     """
     Generates text using a pre-trained Transformer model.
 
@@ -46,7 +46,7 @@ def generate_text(model_path, input_text, max_new_tokens=100, device='cuda'):
 
     return output_text
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Generate text using a pre-trained Transformer model.")
     parser.add_argument('--model_path', type=str, help='Path to the saved model checkpoint.')
     parser.add_argument('--input_text', type=str, help='The initial text to start generation from.')

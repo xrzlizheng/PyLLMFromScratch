@@ -6,6 +6,7 @@ import numpy as np
 from config.config import default_config as config
 from src.models.transformer import Transformer
 from data_loader.data_loader import get_batch_iterator
+from typing import Dict
 
 # --- Initialize the Model and Print Parameters ---
 
@@ -34,7 +35,7 @@ AVG_WINDOW = 64
 
 # Helper function to estimate the average loss for training and development data.
 @torch.no_grad()
-def estimate_loss(steps):
+def estimate_loss(steps: int) -> Dict[str, float]:
     """
     Evaluate the model on training and development datasets and calculate average loss.
 
