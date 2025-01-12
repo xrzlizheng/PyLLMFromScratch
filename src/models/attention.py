@@ -16,7 +16,7 @@ class Head(nn.Module):
         n_embed (int): The dimensionality of the input embedding.
         context_length (int): The maximum length of the input sequence, used for causal masking.
     """
-    def __init__(self, head_size, n_embed, context_length):
+    def __init__(self, head_size: int, n_embed: int, context_length: int) -> None:
         """
         Initializes the attention head.
 
@@ -32,7 +32,7 @@ class Head(nn.Module):
         # Lower triangular matrix for causal masking
         self.register_buffer('tril', torch.tril(torch.ones(context_length, context_length)))
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Forward pass through the attention head.
 
@@ -68,7 +68,7 @@ class MultiHeadAttention(nn.Module):
         n_embed (int): The dimensionality of the input embedding.
         context_length (int): The maximum length of the input sequence.
     """
-    def __init__(self, n_head, n_embed, context_length):
+    def __init__(self, n_head: int, n_embed: int, context_length: int) -> None:
         """
         Initializes the multi-head attention module.
 
@@ -80,7 +80,7 @@ class MultiHeadAttention(nn.Module):
         super().__init__()
         self.heads = nn.ModuleList([Head(n_embed // n_head, n_embed, context_length) for _ in range(n_head)])
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Forward pass through the multi-head attention.
 

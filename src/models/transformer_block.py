@@ -15,7 +15,7 @@ class Block(nn.Module):
         n_embed (int): The dimensionality of the input embedding.
         context_length (int): The maximum length of the input sequence.
     """
-    def __init__(self, n_head, n_embed, context_length):
+    def __init__(self, n_head: int, n_embed: int, context_length: int) -> None:
         """
         Initializes the Transformer block.
 
@@ -30,7 +30,7 @@ class Block(nn.Module):
         self.ln2 = nn.LayerNorm(n_embed)
         self.mlp = MLP(n_embed)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Forward pass through the Transformer block.
 
@@ -46,7 +46,7 @@ class Block(nn.Module):
         x = x + self.mlp(self.ln2(x))
         return x
 
-    def forward_embedding(self, x):
+    def forward_embedding(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         """
         Forward pass focusing on the embedding and attention parts.
 

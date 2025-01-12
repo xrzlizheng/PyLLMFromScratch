@@ -17,7 +17,7 @@ class Transformer(nn.Module):
         vocab_size (int): The size of the vocabulary.
         N_BLOCKS (int): The number of transformer blocks in the model.
     """
-    def __init__(self, n_head, n_embed, context_length, vocab_size, N_BLOCKS):
+    def __init__(self, n_head: int, n_embed: int, context_length: int, vocab_size: int, N_BLOCKS: int) -> None:
         """
         Initializes the Transformer model.
 
@@ -38,7 +38,7 @@ class Transformer(nn.Module):
         self.lm_head = nn.Linear(n_embed, vocab_size)
         self.register_buffer('pos_idxs', torch.arange(context_length))
 
-    def _pre_attn_pass(self, idx):
+    def _pre_attn_pass(self, idx: torch.Tensor) -> torch.Tensor:
         """
         Combines token and position embeddings.
 
@@ -53,7 +53,7 @@ class Transformer(nn.Module):
         pos_embedding = self.position_embed(self.pos_idxs[:T])
         return tok_embedding + pos_embedding
 
-    def forward(self, idx, targets=None):
+    def forward(self, idx: torch.Tensor, targets: torch.Tensor = None) -> tuple[torch.Tensor, torch.Tensor | None]:
         """
         Forward pass through the Transformer.
 
@@ -77,7 +77,7 @@ class Transformer(nn.Module):
             loss = F.cross_entropy(flat_logits, targets)
         return logits, loss
 
-    def forward_embedding(self, idx):
+    def forward_embedding(self, idx: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         """
         Forward pass focusing on the embedding and attention blocks.
 
@@ -93,7 +93,7 @@ class Transformer(nn.Module):
             x, residual = block.forward_embedding(x)
         return x, residual
 
-    def generate(self, idx, max_new_tokens):
+    def generate(self, idx: torch.Tensor, max_new_tokens: int) -> torch.Tensor:
         """
         Generates new tokens given a starting sequence.
 

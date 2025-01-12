@@ -1,8 +1,9 @@
 import torch
 import numpy as np
 import h5py
+from typing import Iterator, Tuple
 
-def get_batch_iterator(data_path, batch_size, context_length, device="cpu"):
+def get_batch_iterator(data_path: str, batch_size: int, context_length: int, device: str = "cpu") -> Iterator[Tuple[torch.Tensor, torch.Tensor]]:
     """
     Creates an iterator for generating batches of data from an HDF5 file.
 

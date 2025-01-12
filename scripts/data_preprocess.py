@@ -5,8 +5,9 @@ import tiktoken
 import h5py
 from tqdm import tqdm
 import argparse
+from typing import Optional
 
-def process_files(input_dir, output_file, tokenizer_name, max_data=None):
+def process_files(input_dir: str, output_file: str, tokenizer_name: str, max_data: Optional[int] = None) -> None:
     """
     Process a specified number of lines from each .jsonl.zst file in the input directory
     and save encoded tokens to an HDF5 file.
