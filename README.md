@@ -1217,3 +1217,7 @@ I recommend that you create the 13+ million-parameter model and then start scali
 <hr>
 
 Wanna chat on something? [My Linkedin](https://www.linkedin.com/in/fareed-khan-dev/)
+
+## Star History
+
+[![](https://api.star-history.com/svg?repos=FareedKhan-dev/train-llm-from-scratch&type=Date)](https://star-history.com/#FareedKhan-dev/train-llm-from-scratch&Date)
