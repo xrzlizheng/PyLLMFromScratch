@@ -43,9 +43,10 @@ class Head(nn.Module):
             torch.Tensor: Output tensor after applying attention.
         """
         B, T, C = x.shape
+        head_size = self.key.out_features
         k = self.key(x)     # (B, T, head_size)
         q = self.query(x)   # (B, T, head_size)
-        scale_factor = 1 / math.sqrt(C)
+        scale_factor = 1 / math.sqrt(head_size)
         # Calculate attention weights: (B, T, head_size) @ (B, head_size, T) -> (B, T, T)
         attn_weights = q @ k.transpose(-2, -1) * scale_factor
         # Apply causal masking
