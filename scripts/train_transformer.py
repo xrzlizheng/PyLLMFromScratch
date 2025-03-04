@@ -19,6 +19,7 @@ model = Transformer(
     emb_dim=config.N_EMBED,
     num_heads=config.N_HEAD,
     num_blocks=config.N_BLOCKS,
+    device=device,
 ).to(device)
 
 criterion = torch.nn.CrossEntropyLoss()

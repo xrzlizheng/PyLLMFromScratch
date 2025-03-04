@@ -14,13 +14,16 @@ class Transformer(nn.Module):
     blocks: nn.ModuleList
     lm_head: nn.Linear
     
-    def __init__(self, text_dim: int, ctx_len: int, emb_dim: int, num_heads: int, num_blocks: int):
+    model_device: torch.device
+    
+    def __init__(self, text_dim: int, ctx_len: int, emb_dim: int, num_heads: int, num_blocks: int, device: torch.device = None):
         super().__init__()
         self.text_dim = text_dim
         self.ctx_len = ctx_len
         self.emb_dim = emb_dim
         self.num_heads = num_heads
         self.num_blocks = num_blocks
+        self.model_device = device
         
         self.text_emb = nn.Embedding(text_dim, emb_dim)
         self.pos_emb = nn.Embedding(ctx_len, emb_dim)
@@ -35,7 +38,7 @@ class Transformer(nn.Module):
         """Transformer forward pass. Input 2-D tensor contains raw tokens, NOT one-hot encoded."""
         assert len(x.shape) == 2 and x.shape[-1] <= self.ctx_len
         
-        x = self.text_emb(x) + self.pos_emb(torch.arange(x.shape[-1]))
+        x = self.text_emb(x) + self.pos_emb(torch.arange(x.shape[-1], device=self.model_device))
         assert len(x.shape) == 3 and x.shape[2] == self.emb_dim
         
         for block in self.blocks:
