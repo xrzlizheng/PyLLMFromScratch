@@ -1,0 +1,7 @@
+- No bias in Q/K/V
+- `attn = torch.tril(attn, diagonal=0) + torch.triu(torch.ones_like(attn) * (-torch.inf), diagonal=1)`
+- `k = torch.transpose(k, -1, -2)`
+- `x = x + self.attn(self.ln_attn(x)); x = x + self.mlp(self.ln_mlp(x))`
+- `x = self.lm_head(self.ln_lmhead(x))`
+- Send model & all tensors to device
+- Use `x = x + ...` not `x += ...` !
