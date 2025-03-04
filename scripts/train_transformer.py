@@ -22,9 +22,6 @@ model = Transformer(
     device=device,
 ).to(device)
 
-if device.type != 'cpu':
-    model = model.cuda()
-
 criterion = torch.nn.CrossEntropyLoss()
 
 def create_dataloader(split: Literal["train", "val"]) -> Iterator[Tuple[torch.Tensor, torch.Tensor]]:
@@ -60,6 +57,8 @@ def evaluate_model(model: Transformer, num_batches: int = config.T_EVAL_ITERS, s
     print("Evaluation start.")
     for _ in tqdm(list(range(num_batches))):
         x, y = next(dataloader)
+        x = x.to(device)
+        y = y.to(device)
         assert len(x.shape) == 2 and x.shape[0] == y.shape[0]
         
         losses.append(
