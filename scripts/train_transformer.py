@@ -2,6 +2,7 @@ from data_loader.data_loader import get_batch_iterator
 from src.models import Transformer
 from config import config
 from typing import Iterator, Literal, Tuple
+from tqdm import tqdm
 import torch
 import numpy as np
 
@@ -32,6 +33,8 @@ train_dataloader = create_dataloader("train")
 val_dataloader = create_dataloader("val")
 
 def compute_loss(logits: torch.Tensor, gt: torch.Tensor) -> torch.Tensor:
+    gt = gt.type(torch.LongTensor).to(device)
+    
     B, CL, VOCAB = logits.shape
     logits = torch.moveaxis(logits, 2, 1)
     assert logits.shape == (B, VOCAB, CL)
@@ -67,11 +70,15 @@ optimizer = torch.optim.Adam(
     config.T_LR,
 )
 
+print(f"Parameter count: {sum(param.numel() for param in model_params if param.requires_grad)}")
+
 train_losses = []
 eval_losses = []
 
-for step in range(config.T_TRAIN_STEPS):
+for step in tqdm(list(range(config.T_TRAIN_STEPS))):
     x, y_gt = next(train_dataloader)
+    x = x.to(device)
+    y_gt = y_gt.to(device)
     logits = model(x, get_probs=False, keep_prompt_seg=True)
     
     optimizer.zero_grad(set_to_none=True)
