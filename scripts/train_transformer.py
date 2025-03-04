@@ -59,7 +59,7 @@ def evaluate_model(model: Transformer, num_batches: int = config.T_EVAL_ITERS, s
         
         losses.append(
             compute_loss(
-                model(x),
+                model(x, get_probs=False, keep_prompt_seg=True),
                 y
             ).item()
         )
