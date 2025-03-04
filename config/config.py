@@ -28,8 +28,8 @@ T_LR_DECAY_RATE = 0.95
 T_OUT_PATH = "models/transformer_B.pt"  # Path to save the trained model
 
 # Device configuration
-# DEVICE = 'cuda'
-DEVICE = 'cpu'
+DEVICE = 'cuda'
+# DEVICE = 'cpu'
 
 # Store all configurations in a dictionary for easy access and modification
 default_config = {
