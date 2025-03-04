@@ -18,6 +18,6 @@ class TransformerBlock(nn.Module):
         self.ln_mlp = nn.LayerNorm(emb_dim)
     
     def forward(self, x: torch.Tensor):
-        x += self.attn(self.ln_attn(x))
-        x += self.mlp(self.ln_mlp(x))
+        x = x + self.attn(self.ln_attn(x))
+        x = x + self.mlp(self.ln_mlp(x))
         return x
