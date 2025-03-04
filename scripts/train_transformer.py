@@ -22,6 +22,9 @@ model = Transformer(
     device=device,
 ).to(device)
 
+if device.type != 'cpu':
+    model = model.cuda()
+
 criterion = torch.nn.CrossEntropyLoss()
 
 def create_dataloader(split: Literal["train", "val"]) -> Iterator[Tuple[torch.Tensor, torch.Tensor]]:
