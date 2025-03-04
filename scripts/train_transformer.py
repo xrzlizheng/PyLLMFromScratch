@@ -70,7 +70,8 @@ optimizer = torch.optim.Adam(
     config.T_LR,
 )
 
-print(f"Parameter count: {sum(param.numel() for param in model_params if param.requires_grad)}")
+print(f"All parameter count: {sum(param.numel() for param in model_params)}")
+print(f"Trainable parameter count: {sum(param.numel() for param in model_params if param.requires_grad)}")
 
 train_losses = []
 eval_losses = []

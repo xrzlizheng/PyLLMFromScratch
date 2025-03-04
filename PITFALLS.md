@@ -3,3 +3,4 @@
 - `k = torch.transpose(k, -1, -2)`
 - `x += self.attn(self.ln_attn(x)); x += self.mlp(self.ln_mlp(x))`
 - `x = self.lm_head(self.ln_lmhead(x))`
+- Send model & all tensors to device
