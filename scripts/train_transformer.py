@@ -54,7 +54,8 @@ def evaluate_model(model: Transformer, num_batches: int = config.T_EVAL_ITERS, s
         dataloader = create_dataloader(split)
     
     losses = []
-    for _ in range(num_batches):
+    print("Evaluation start.")
+    for _ in tqdm(list(range(num_batches))):
         x, y = next(dataloader)
         assert len(x.shape) == 2 and x.shape[0] == y.shape[0]
         
