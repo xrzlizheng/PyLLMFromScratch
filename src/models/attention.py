@@ -54,6 +54,7 @@ class MultiHeadAttn(nn.Module):
             dim = -1
         )
 
+
 if __name__ == "__main__":
     mha = MultiHeadAttn(16, 4)
     x = torch.randn((5, 64, 16))
