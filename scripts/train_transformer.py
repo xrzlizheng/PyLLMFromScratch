@@ -64,14 +64,14 @@ def evaluate_model(model: Transformer, num_batches: int = config.T_EVAL_ITERS, s
     
     return np.mean(losses)
 
-model_params = model.parameters()
 optimizer = torch.optim.Adam(
-    model_params, 
+    model.parameters(), 
     config.T_LR,
 )
 
-print(f"All parameter count: {sum(param.numel() for param in model_params)}")
-print(f"Trainable parameter count: {sum(param.numel() for param in model_params if param.requires_grad)}")
+print(f"All components count: {sum(1 for param in model.parameters())}")
+print(f"All parameter count: {sum(param.numel() for param in model.parameters())}")
+print(f"Trainable parameter count: {sum(param.numel() for param in model.parameters() if param.requires_grad)}")
 
 train_losses = []
 eval_losses = []
