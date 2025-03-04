@@ -6,6 +6,8 @@ from tqdm import tqdm
 import torch
 import numpy as np
 
+torch.autograd.set_detect_anomaly(True)
+
 try:
     device = torch.device(config.DEVICE)
 except:
