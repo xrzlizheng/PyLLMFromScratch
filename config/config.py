@@ -2,14 +2,14 @@
 
 # Define vocabulary size and transformer configuration (3 Billion)
 VOCAB_SIZE = 50304          # Number of unique tokens in the vocabulary
-# CONTEXT_LENGTH = 512        # Maximum sequence length for the model
-# N_EMBED = 2048              # Dimension of the embedding space
-# N_HEAD = 16                 # Number of attention heads in each transformer block
-# N_BLOCKS = 64               # Number of transformer blocks in the model
-CONTEXT_LENGTH = 16        # Maximum sequence length for the model
-N_EMBED = 32              # Dimension of the embedding space
-N_HEAD = 8                 # Number of attention heads in each transformer block
-N_BLOCKS = 1               # Number of transformer blocks in the model
+CONTEXT_LENGTH = 512        # Maximum sequence length for the model
+N_EMBED = 2048              # Dimension of the embedding space
+N_HEAD = 16                 # Number of attention heads in each transformer block
+N_BLOCKS = 64               # Number of transformer blocks in the model
+# CONTEXT_LENGTH = 16        # Maximum sequence length for the model
+# N_EMBED = 32              # Dimension of the embedding space
+# N_HEAD = 8                 # Number of attention heads in each transformer block
+# N_BLOCKS = 1               # Number of transformer blocks in the model
 
 # Paths to training and development datasets
 TRAIN_PATH = "data/train/pile_train.h5"  # File path for the training dataset
