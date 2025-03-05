@@ -1,63 +1,110 @@
 import torch
-from torch import nn
+import torch.nn as nn
+import torch.nn.functional as F
+import math
 
-class Attention(nn.Module):
-    emb_dim: int
-    attn_dim: int
-    q_head: nn.Linear
-    k_head: nn.Linear
-    v_head: nn.Linear
-    
-    def __init__(self, emb_dim: int, attn_dim: int):
+class Head(nn.Module):
+    """
+    A single attention head.
+
+    This module calculates attention scores and applies them to the values.
+    It includes key, query, and value projections, and uses causal masking
+    to prevent attending to future tokens.
+
+    Args:
+        head_size (int): The dimensionality of the key, query, and value projections.
+        n_embed (int): The dimensionality of the input embedding.
+        context_length (int): The maximum length of the input sequence, used for causal masking.
+    """
+    def __init__(self, head_size: int, n_embed: int, context_length: int) -> None:
+        """
+        Initializes the attention head.
+
+        Args:
+            head_size (int): The dimensionality of the key, query, and value projections.
+            n_embed (int): The dimensionality of the input embedding.
+            context_length (int): The maximum length of the input sequence.
+        """
         super().__init__()
-        self.emb_dim = emb_dim
-        self.attn_dim = attn_dim
-        self.q_head = nn.Linear(emb_dim, attn_dim, bias=False)
-        self.k_head = nn.Linear(emb_dim, attn_dim, bias=False)
-        self.v_head = nn.Linear(emb_dim, attn_dim, bias=False)
-    
+        self.key = nn.Linear(n_embed, head_size, bias=False)   # Key projection
+        self.query = nn.Linear(n_embed, head_size, bias=False) # Query projection
+        self.value = nn.Linear(n_embed, head_size, bias=False) # Value projection
+        # Lower triangular matrix for causal masking
+        self.register_buffer('tril', torch.tril(torch.ones(context_length, context_length)))
+
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # x: (B, ctx_len, emb_dim)
-        assert len(x.shape) == 3 and x.shape[-1] == self.emb_dim
-        
-        q: torch.Tensor = self.q_head(x) # (B, ctx_len, attn_dim)
-        k: torch.Tensor = self.k_head(x)
-        k = torch.transpose(k, -1, -2) # (B, attn_dim, ctx_len)
-        attn = q @ k * (self.attn_dim ** -0.5)
-        attn = torch.tril(attn, diagonal=0) + torch.triu(torch.ones_like(attn) * (-torch.inf), diagonal=1)
-        attn = nn.functional.softmax(attn, dim=-1) # (B, ctx_len, ctx_len)
-        
-        v: torch.Tensor = self.v_head(x) # (B, ctx_len, attn_dim)
-        return attn @ v    
+        """
+        Forward pass through the attention head.
 
+        Args:
+            x (torch.Tensor): Input tensor of shape (B, T, C).
 
-class MultiHeadAttn(nn.Module):
-    emb_dim: int
-    num_heads: int
-    heads: nn.ModuleList
-    
-    def __init__(self, emb_dim: int, num_heads: int):
+        Returns:
+            torch.Tensor: Output tensor after applying attention.
+        """
+        B, T, C = x.shape
+        k = self.key(x)     # (B, T, head_size)
+        q = self.query(x)   # (B, T, head_size)
+        scale_factor = 1 / math.sqrt(C)
+        # Calculate attention weights: (B, T, head_size) @ (B, head_size, T) -> (B, T, T)
+        attn_weights = q @ k.transpose(-2, -1) * scale_factor
+        # Apply causal masking
+        attn_weights = attn_weights.masked_fill(self.tril[:T, :T] == 0, float('-inf'))
+        attn_weights = F.softmax(attn_weights, dim=-1)
+        v = self.value(x)   # (B, T, head_size)
+        # Apply attention weights to values
+        out = attn_weights @ v # (B, T, T) @ (B, T, head_size) -> (B, T, head_size)
+        return out
+
+class MultiHeadAttention(nn.Module):
+    """
+    Multi-Head Attention module.
+
+    This module combines multiple attention heads in parallel. The outputs of each head
+    are concatenated to form the final output.
+
+    Args:
+        n_head (int): The number of parallel attention heads.
+        n_embed (int): The dimensionality of the input embedding.
+        context_length (int): The maximum length of the input sequence.
+    """
+    def __init__(self, n_head: int, n_embed: int, context_length: int) -> None:
+        """
+        Initializes the multi-head attention module.
+
+        Args:
+            n_head (int): The number of parallel attention heads.
+            n_embed (int): The dimensionality of the input embedding.
+            context_length (int): The maximum length of the input sequence.
+        """
         super().__init__()
-        self.emb_dim = emb_dim
-        self.num_heads = num_heads
-        
-        assert emb_dim % num_heads == 0
-        
-        self.heads = nn.ModuleList([
-            Attention(emb_dim, emb_dim // num_heads)
-            for _ in range(num_heads)
-        ])
-    
-    def forward(self, x: torch.Tensor):
-        return torch.cat(
-            [attn(x) for attn in self.heads],
-            dim = -1
-        )
+        self.heads = nn.ModuleList([Head(n_embed // n_head, n_embed, context_length) for _ in range(n_head)])
 
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Forward pass through the multi-head attention.
 
-if __name__ == "__main__":
-    mha = MultiHeadAttn(16, 4)
-    x = torch.randn((5, 64, 16))
-    y = mha(x)
-    print(x.shape)
-    print(y.shape)
+        Args:
+            x (torch.Tensor): Input tensor of shape (B, T, C).
+
+        Returns:
+            torch.Tensor: Output tensor after concatenating the outputs of all heads.
+        """
+        # Concatenate the output of each head along the last dimension (C)
+        x = torch.cat([h(x) for h in self.heads], dim=-1)
+        return x
+
+if __name__ == '__main__':
+    # Example Usage (optional, for testing the module independently)
+    batch_size = 2
+    sequence_length = 5
+    embedding_dim = 32
+    num_heads = 4
+    context_len = 5
+    input_tensor = torch.randn(batch_size, sequence_length, embedding_dim)
+
+    multihead_attn = MultiHeadAttention(n_head=num_heads, n_embed=embedding_dim, context_length=context_len)
+    output_tensor = multihead_attn(input_tensor)
+
+    print("MultiHeadAttention Input Shape:", input_tensor.shape)
+    print("MultiHeadAttention Output Shape:", output_tensor.shape)
