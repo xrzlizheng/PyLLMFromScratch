@@ -1,8 +1,5 @@
 ![main image](https://cdn-images-1.medium.com/max/5200/1*r99Hq3YBd5FTTWLNYKKvPw.png)
 
-<div align="center">
-
-<!-- omit in toc -->
 # Train LLM From Scratch
   
 ## Training Data Info
