@@ -5,47 +5,47 @@ from typing import Iterator, Tuple
 
 def get_batch_iterator(data_path: str, batch_size: int, context_length: int, device: str = "cpu") -> Iterator[Tuple[torch.Tensor, torch.Tensor]]:
     """
-    Creates an iterator for generating batches of data from an HDF5 file.
+    创建一个迭代器，用于从HDF5文件生成数据批次。
 
-    Args:
-        data_path (str): Path to the HDF5 file containing tokenized data.
-        batch_size (int): Number of sequences in each batch.
-        context_length (int): Length of each sequence.
-        device (str, optional): Device to load the data onto ('cpu' or 'cuda'). Defaults to "cpu".
+    参数:
+        data_path (str): 包含token化数据的HDF5文件路径。
+        batch_size (int): 每个批次中的序列数量。
+        context_length (int): 每个序列的长度。
+        device (str, 可选): 加载数据的设备('cpu'或'cuda')，默认为"cpu"。
 
-    Yields:
-        tuple: A tuple containing input sequences (xb) and target sequences (yb).
+    生成:
+        tuple: 包含输入序列(xb)和目标序列(yb)的元组。
     """
-    # Open the HDF5 file in read mode
+    # 以只读模式打开HDF5文件
     with h5py.File(data_path, 'r') as hdf5_file:
 
-        # Extract the dataset of tokenized sequences
+        # 提取token化序列的数据集
         dataset = hdf5_file['tokens']
 
-        # Get the total size of the dataset
+        # 获取数据集的总大小
         dataset_size = dataset.shape[0]
 
-        # Calculate the number of examples (sequences) that can be made from the data
+        # 计算可以从数据中生成的示例(序列)数量
         n_examples = (dataset_size - 1) // context_length
 
-        # Create an array of indices for examples and shuffle them for randomness
+        # 创建示例索引数组并随机打乱顺序
         example_idxs = np.arange(n_examples)
         np.random.shuffle(example_idxs)
 
-        # Initialize epoch counter and example counter
+        # 初始化epoch计数器和示例计数器
         epochs = 0
         counter = 0
 
         while True:
-            # Check if the current batch exceeds the number of available examples
+            # 检查当前批次是否超过可用示例数量
             if counter + batch_size > n_examples:
-                # Shuffle the indices again and reset the counter to 0
+                # 再次打乱索引并将计数器重置为0
                 np.random.shuffle(example_idxs)
                 counter = 0
-                print(f"Finished epoch {epochs}")  # Print epoch number when an epoch finishes
-                epochs += 1  # Increment the epoch counter
+                print(f"Finished epoch {epochs}")  # 当一个epoch结束时打印epoch编号
+                epochs += 1  # 增加epoch计数器
 
-            # Select a batch of random indices to generate sequences
+            # 选择一批随机索引来生成序列
             random_indices = example_idxs[counter:counter+batch_size] * context_length
 
             # Retrieve sequences from the dataset based on the random indices

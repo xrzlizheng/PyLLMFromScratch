@@ -5,42 +5,42 @@ import math
 
 class Head(nn.Module):
     """
-    A single attention head.
+    单个注意力头。
 
-    This module calculates attention scores and applies them to the values.
-    It includes key, query, and value projections, and uses causal masking
-    to prevent attending to future tokens.
+    该模块计算注意力分数并将其应用于值。
+    它包括key、query和value投影，并使用因果掩码
+    以防止关注未来的token。
 
-    Args:
-        head_size (int): The dimensionality of the key, query, and value projections.
-        n_embed (int): The dimensionality of the input embedding.
-        context_length (int): The maximum length of the input sequence, used for causal masking.
+    参数:
+        head_size (int): key、query和value投影的维度。
+        n_embed (int): 输入嵌入的维度。
+        context_length (int): 输入序列的最大长度，用于因果掩码。
     """
     def __init__(self, head_size: int, n_embed: int, context_length: int) -> None:
         """
-        Initializes the attention head.
+        初始化注意力头。
 
-        Args:
-            head_size (int): The dimensionality of the key, query, and value projections.
-            n_embed (int): The dimensionality of the input embedding.
-            context_length (int): The maximum length of the input sequence.
+        参数:
+            head_size (int): key、query和value投影的维度。
+            n_embed (int): 输入嵌入的维度。
+            context_length (int): 输入序列的最大长度。
         """
         super().__init__()
-        self.key = nn.Linear(n_embed, head_size, bias=False)   # Key projection
-        self.query = nn.Linear(n_embed, head_size, bias=False) # Query projection
-        self.value = nn.Linear(n_embed, head_size, bias=False) # Value projection
-        # Lower triangular matrix for causal masking
+        self.key = nn.Linear(n_embed, head_size, bias=False)   # Key投影
+        self.query = nn.Linear(n_embed, head_size, bias=False) # Query投影
+        self.value = nn.Linear(n_embed, head_size, bias=False) # Value投影
+        # 用于因果掩码的下三角矩阵
         self.register_buffer('tril', torch.tril(torch.ones(context_length, context_length)))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
-        Forward pass through the attention head.
+        通过注意力头的前向传播。
 
-        Args:
-            x (torch.Tensor): Input tensor of shape (B, T, C).
+        参数:
+            x (torch.Tensor): 形状为(B, T, C)的输入张量。
 
-        Returns:
-            torch.Tensor: Output tensor after applying attention.
+        返回:
+            torch.Tensor): 应用注意力后的输出张量。
         """
         B, T, C = x.shape
         head_size = self.key.out_features

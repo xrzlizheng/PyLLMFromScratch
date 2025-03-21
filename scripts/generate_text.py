@@ -6,21 +6,21 @@ from src.models.transformer import Transformer  # Assuming your Transformer clas
 
 def generate_text(model_path: str, input_text: str, max_new_tokens: int = 100, device: str = 'cuda') -> str:
     """
-    Generates text using a pre-trained Transformer model.
+    使用预训练的Transformer模型生成文本。
 
-    Args:
-        model_path (str): Path to the saved model checkpoint.
-        input_text (str): The initial text to start generation from.
-        max_new_tokens (int): The maximum number of new tokens to generate.
-        device (str): 'cuda' or 'cpu', the device to run the model on.
+    参数:
+        model_path (str): 保存的模型检查点路径。
+        input_text (str): 用于生成文本的初始文本。
+        max_new_tokens (int): 要生成的最大新token数量。
+        device (str): 'cuda' 或 'cpu'，运行模型的设备。
 
-    Returns:
-        str: The generated text.
+    返回:
+        str: 生成的文本。
     """
-    # Load the model checkpoint
+    # 加载模型检查点
     checkpoint = torch.load(model_path, map_location=torch.device(device))
 
-    # Initialize the model using the configuration from config.py
+    # 使用config.py中的配置初始化模型
     model = Transformer(
         n_head=config['n_head'],
         n_embed=config['n_embed'],
@@ -31,17 +31,17 @@ def generate_text(model_path: str, input_text: str, max_new_tokens: int = 100, d
     model.load_state_dict(checkpoint['model_state_dict'])
     model.eval().to(device)
 
-    # Load the tokenizer
+    # 加载tokenizer
     enc = tiktoken.get_encoding("r50k_base")
 
     start_ids = enc.encode_ordinary(input_text)
     context = torch.tensor(start_ids, dtype=torch.long, device=device).unsqueeze(0)
 
-    # Generation process
+    # 生成过程
     with torch.no_grad():
         generated_tokens = model.generate(context, max_new_tokens=max_new_tokens)[0].tolist()
 
-    # Decode the generated tokens
+    # 解码生成的tokens
     output_text = enc.decode(generated_tokens)
 
     return output_text

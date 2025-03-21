@@ -5,24 +5,24 @@ from src.models.mlp import MLP
 
 class Block(nn.Module):
     """
-    A single Transformer block.
+    一个Transformer模块。
 
-    This block consists of a multi-head attention layer followed by an MLP,
-    with layer normalization and residual connections.
+    该模块由一个多头注意力层和一个MLP组成，
+    带有层归一化和残差连接。
 
-    Args:
-        n_head (int): The number of attention heads in the multi-head attention layer.
-        n_embed (int): The dimensionality of the input embedding.
-        context_length (int): The maximum length of the input sequence.
+    参数:
+        n_head (int): 多头注意力层中的注意力头数量。
+        n_embed (int): 输入嵌入的维度。
+        context_length (int): 输入序列的最大长度。
     """
     def __init__(self, n_head: int, n_embed: int, context_length: int) -> None:
         """
-        Initializes the Transformer block.
+        初始化Transformer模块。
 
-        Args:
-            n_head (int): The number of attention heads.
-            n_embed (int): The dimensionality of the embedding space.
-            context_length (int): The maximum sequence length.
+        参数:
+            n_head (int): 注意力头数量。
+            n_embed (int): 嵌入空间的维度。
+            context_length (int): 最大序列长度。
         """
         super().__init__()
         self.ln1 = nn.LayerNorm(n_embed)
@@ -32,13 +32,13 @@ class Block(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
-        Forward pass through the Transformer block.
+        Transformer模块的前向传播。
 
-        Args:
-            x (torch.Tensor): Input tensor.
+        参数:
+            x (torch.Tensor): 输入张量。
 
-        Returns:
-            torch.Tensor: Output tensor after the block.
+        返回:
+            torch.Tensor: 经过模块处理后的输出张量。
         """
         # Apply multi-head attention with residual connection
         x = x + self.attn(self.ln1(x))
@@ -48,13 +48,13 @@ class Block(nn.Module):
 
     def forward_embedding(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         """
-        Forward pass focusing on the embedding and attention parts.
+        专注于embedding和attention部分的前向传播。
 
-        Args:
-            x (torch.Tensor): Input tensor.
+        参数:
+            x (torch.Tensor): 输入张量。
 
-        Returns:
-            tuple: A tuple containing the output after MLP embedding and the residual.
+        返回:
+            tuple: 包含经过MLP embedding后的输出和残差的元组。
         """
         res = x + self.attn(self.ln1(x))
         x = self.mlp.forward_embedding(self.ln2(res))

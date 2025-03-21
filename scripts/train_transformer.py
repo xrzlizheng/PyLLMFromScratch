@@ -8,7 +8,7 @@ from src.models.transformer import Transformer
 from data_loader.data_loader import get_batch_iterator
 from typing import Dict
 
-# --- Initialize the Model and Print Parameters ---
+# --- 初始化模型并打印参数 ---
 
 model = Transformer(
     n_head=config['n_head'],
@@ -18,32 +18,32 @@ model = Transformer(
     N_BLOCKS=config['n_blocks']
 ).to(config['device'])
 
-# Print the total number of parameters
+# 打印模型的总参数数量
 total_params = sum(p.numel() for p in model.parameters())
 print(f"Total number of parameters in the model: {total_params:,}")
 
-# --- Optimizer Setup and Loss Tracking ---
+# --- 优化器设置和损失跟踪 ---
 
-# Set up the AdamW optimizer with the specified learning rate.
+# 使用指定的学习率设置AdamW优化器。
 optimizer = torch.optim.AdamW(model.parameters(), lr=config['t_lr'])
 
-# List to track loss values during training.
+# 用于跟踪训练期间损失值的列表。
 losses = []
 
-# Define a window size for averaging recent losses in the training loop.
+# 定义训练循环中用于平均近期损失的窗口大小。
 AVG_WINDOW = 64
 
 # Helper function to estimate the average loss for training and development data.
 @torch.no_grad()
 def estimate_loss(steps: int) -> Dict[str, float]:
     """
-    Evaluate the model on training and development datasets and calculate average loss.
+    评估模型在训练和开发数据集上的表现，并计算平均损失。
 
-    Args:
-        steps (int): Number of steps to evaluate.
+    参数:
+        steps (int): 评估的步数。
 
-    Returns:
-        dict: Dictionary containing average losses for 'train' and 'dev' splits.
+    返回:
+        dict: 包含'train'和'dev'分割的平均损失的字典。
     """
     out = {}
     model.eval()  # Set the model to evaluation mode.

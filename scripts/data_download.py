@@ -4,38 +4,38 @@ import requests
 from tqdm import tqdm
 from typing import List
 
-# Base URL for the dataset files
+# 数据集文件的基础URL
 BASE_URL = "https://huggingface.co/datasets/monology/pile-uncopyrighted/resolve/main"
-VAL_URL = f"{BASE_URL}/val.jsonl.zst"  # URL for the validation dataset
-TRAIN_URLS = [f"{BASE_URL}/train/{i:02d}.jsonl.zst" for i in range(65)]  # URLs for 65 training files (adjust the range if needed)
+VAL_URL = f"{BASE_URL}/val.jsonl.zst"  # 验证数据集的URL
+TRAIN_URLS = [f"{BASE_URL}/train/{i:02d}.jsonl.zst" for i in range(65)]  # 65个训练文件的URL（如果需要可以调整范围）
 
 def download_file(url: str, file_name: str) -> None:
     """
-    Downloads a file from the given URL and saves it with the specified file name.
-    Displays a progress bar using tqdm.
+    从给定URL下载文件并保存到指定文件名。
+    使用tqdm显示进度条。
     
-    Args:
-        url (str): The URL of the file to download.
-        file_name (str): The local path where the file will be saved.
+    参数:
+        url (str): 要下载的文件的URL。
+        file_name (str): 文件保存的本地路径。
     """
-    print(f"Downloading: {file_name}...")
-    response = requests.get(url, stream=True)  # Stream the file content
-    total_size = int(response.headers.get('content-length', 0))  # Get total file size if available
-    block_size = 1024  # Size of each block for the progress bar
-    with open(file_name, 'wb') as f:  # Open file for writing in binary mode
-        for chunk in tqdm(response.iter_content(block_size), total=total_size // block_size, desc="Downloading", leave=True):
-            f.write(chunk)  # Write each chunk to the file
+    print(f"正在下载: {file_name}...")
+    response = requests.get(url, stream=True)  # 流式传输文件内容
+    total_size = int(response.headers.get('content-length', 0))  # 获取文件总大小（如果可用）
+    block_size = 1024  # 进度条的每个块大小
+    with open(file_name, 'wb') as f:  # 以二进制模式打开文件进行写入
+        for chunk in tqdm(response.iter_content(block_size), total=total_size // block_size, desc="正在下载", leave=True):
+            f.write(chunk)  # 将每个块写入文件
 
 def download_dataset(val_url: str, train_urls: List[str], val_dir: str, train_dir: str, max_train_files: int) -> None:
     """
-    Manages downloading of the dataset, including both validation and training files.
+    管理数据集的下载，包括验证和训练文件。
     
-    Args:
-        val_url (str): URL for the validation dataset.
-        train_urls (list): List of URLs for the training dataset files.
-        val_dir (str): Directory where the validation file will be stored.
-        train_dir (str): Directory where the training files will be stored.
-        max_train_files (int): Maximum number of training files to download.
+    参数:
+        val_url (str): 验证数据集的URL。
+        train_urls (list): 训练数据集文件的URL列表。
+        val_dir (str): 验证文件存储的目录。
+        train_dir (str): 训练文件存储的目录。
+        max_train_files (int): 要下载的最大训练文件数。
     """
     # Define the path for the validation file
     val_file_path = os.path.join(val_dir, "val.jsonl.zst")

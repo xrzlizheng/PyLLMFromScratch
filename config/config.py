@@ -1,31 +1,31 @@
-# --- Configuration ---
+# --- 配置 ---
 
-# Define vocabulary size and transformer configuration (3 Billion)
-VOCAB_SIZE = 50304          # Number of unique tokens in the vocabulary
-CONTEXT_LENGTH = 512        # Maximum sequence length for the model
-N_EMBED = 2048              # Dimension of the embedding space
-N_HEAD = 16                 # Number of attention heads in each transformer block
-N_BLOCKS = 64               # Number of transformer blocks in the model
+# 定义词汇表大小和transformer配置(30亿参数)
+VOCAB_SIZE = 50304          # 词汇表中唯一token的数量
+CONTEXT_LENGTH = 512        # 模型的最大序列长度
+N_EMBED = 2048              # 嵌入空间的维度
+N_HEAD = 16                 # 每个transformer块中的注意力头数量
+N_BLOCKS = 64               # 模型中的transformer块数量
 
 # Paths to training and development datasets
-TRAIN_PATH = "data/train/pile_train.h5"  # File path for the training dataset
-DEV_PATH = "data/val/pile_dev.h5"      # File path for the validation dataset
+TRAIN_PATH = "data/train/pile_train.h5"  # 训练数据集的文件路径
+DEV_PATH = "data/val/pile_dev.h5"      # 验证数据集的文件路径
 
 # Transformer training parameters
-T_BATCH_SIZE = 32          # Number of samples per training batch
-T_CONTEXT_LENGTH = 16      # Context length for training batches
-T_TRAIN_STEPS = 200000     # Total number of training steps
-T_EVAL_STEPS = 1000        # Frequency (in steps) to perform evaluation
-T_EVAL_ITERS = 250         # Number of iterations to evaluate the model
-T_LR_DECAY_STEP = 50000    # Step at which to decay the learning rate
-T_LR = 5e-4                # Initial learning rate for training
-T_LR_DECAYED = 5e-5        # Learning rate after decay
-T_OUT_PATH = "models/transformer_B.pt"  # Path to save the trained model
+T_BATCH_SIZE = 32          # 每个训练批次的样本数量
+T_CONTEXT_LENGTH = 16      # 训练批次的上下文长度
+T_TRAIN_STEPS = 200000     # 总训练步数
+T_EVAL_STEPS = 1000        # 执行评估的频率(以步数为单位)
+T_EVAL_ITERS = 250         # 评估模型的迭代次数
+T_LR_DECAY_STEP = 50000    # 学习率衰减的步数
+T_LR = 5e-4                # 训练的初始学习率
+T_LR_DECAYED = 5e-5        # 衰减后的学习率
+T_OUT_PATH = "models/transformer_B.pt"  # 保存训练模型的路径
 
 # Device configuration
-DEVICE = 'cuda'
+DEVICE = 'cuda'              # 设备配置，使用CUDA
 
-# Store all configurations in a dictionary for easy access and modification
+# 将所有配置存储在字典中以便于访问和修改
 default_config = {
     'vocab_size': VOCAB_SIZE,
     'context_length': CONTEXT_LENGTH,

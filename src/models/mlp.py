@@ -4,21 +4,20 @@ from torch import Tensor
 
 class MLP(nn.Module):
     """
-    A simple Multi-Layer Perceptron with one hidden layer.
+    一个简单的单隐藏层多层感知机。
 
-    This module is used within the Transformer block for feed-forward processing.
-    It expands the input embedding size, applies a ReLU activation, and then projects it back
-    to the original embedding size.
+    该模块用于Transformer块中的前馈处理。
+    它扩展输入嵌入的维度，应用ReLU激活函数，然后将其投影回原始嵌入维度。
 
-    Args:
-        n_embed (int): The dimensionality of the input embedding.
+    参数:
+        n_embed (int): 输入嵌入的维度。
     """
     def __init__(self, n_embed: int) -> None:
         """
-        Initializes the MLP module.
+        初始化MLP模块。
 
-        Args:
-            n_embed (int): The dimensionality of the input embedding.
+        参数:
+            n_embed (int): 输入嵌入的维度。
         """
         super().__init__()
         self.hidden = nn.Linear(n_embed, 4 * n_embed)  # Linear layer to expand embedding size
@@ -27,14 +26,14 @@ class MLP(nn.Module):
 
     def forward(self, x: Tensor) -> Tensor:
         """
-        Forward pass through the MLP.
+        MLP的前向传播。
 
-        Args:
-            x (torch.Tensor): Input tensor of shape (B, T, C), where B is batch size,
-                              T is sequence length, and C is embedding size.
+        参数:
+            x (torch.Tensor): 输入张量，形状为(B, T, C)，其中B是批量大小，
+                              T是序列长度，C是嵌入维度。
 
-        Returns:
-            torch.Tensor: Output tensor of the same shape as the input.
+        返回:
+            torch.Tensor: 与输入形状相同的输出张量。
         """
         x = self.forward_embedding(x)
         x = self.project_embedding(x)
@@ -42,26 +41,26 @@ class MLP(nn.Module):
 
     def forward_embedding(self, x: Tensor) -> Tensor:
         """
-        Applies the hidden linear layer followed by ReLU activation.
+        应用隐藏线性层，然后进行ReLU激活。
 
-        Args:
-            x (torch.Tensor): Input tensor.
+        参数:
+            x (torch.Tensor): 输入张量。
 
-        Returns:
-            torch.Tensor: Output after the hidden layer and ReLU.
+        返回:
+            torch.Tensor: 经过隐藏层和ReLU后的输出。
         """
         x = self.relu(self.hidden(x))
         return x
 
     def project_embedding(self, x: Tensor) -> Tensor:
         """
-        Applies the projection linear layer.
+        应用投影线性层。
 
-        Args:
-            x (torch.Tensor): Input tensor.
+        参数:
+            x (torch.Tensor): 输入张量。
 
-        Returns:
-            torch.Tensor: Output after the projection layer.
+        返回:
+            torch.Tensor: 经过投影层后的输出。
         """
         x = self.proj(x)
         return x

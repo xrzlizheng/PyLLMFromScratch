@@ -9,45 +9,44 @@ from typing import Optional
 
 def process_files(input_dir: str, output_file: str, tokenizer_name: str, max_data: Optional[int] = None) -> None:
     """
-    Process a specified number of lines from each .jsonl.zst file in the input directory
-    and save encoded tokens to an HDF5 file.
+    处理输入目录中每个.jsonl.zst文件的指定行数，并将编码后的tokens保存到HDF5文件中。
 
-    Args:
-        input_dir (str): Directory containing input .jsonl.zst files.
-        output_file (str): Path to the output HDF5 file.
-        tokenizer_name (str): Name of the tiktoken tokenizer to use (e.g., 'r50k_base').
-        max_data (int, optional): Maximum number of lines to process from each file.
-                                  If None, process all lines.
+    参数:
+        input_dir (str): 包含输入.jsonl.zst文件的目录。
+        output_file (str): 输出HDF5文件的路径。
+        tokenizer_name (str): 要使用的tiktoken tokenizer名称(例如'r50k_base')。
+        max_data (int, 可选): 每个文件要处理的最大行数。
+                              如果为None，则处理所有行。
     """
-    # Print processing strategy based on max_data
+    # 根据max_data打印处理策略
     if max_data is not None:
         print(f"You have chosen max_data = {max_data}. Processing only the top {max_data} JSON objects from each file.")
     else:
         print("Processing all available JSON objects from each file.")
 
-    # Load the tokenizer using the provided tokenizer name
+    # 使用提供的tokenizer名称加载tokenizer
     enc = tiktoken.get_encoding(tokenizer_name)
 
-    # Create an HDF5 file for output
+    # 创建HDF5文件用于输出
     with h5py.File(output_file, 'w') as out_f:
-        # Initialize the dataset for storing tokenized data
+        # 初始化用于存储token化数据的数据集
         dataset = out_f.create_dataset('tokens', (0,), maxshape=(None,), dtype='i')
         start_index = 0  # Track the starting index for the next batch of tokens
 
-        # Process each .jsonl.zst file in the input directory
+        # 处理输入目录中的每个.jsonl.zst文件
         for filename in sorted(os.listdir(input_dir)):
-            if filename.endswith(".jsonl.zst"):  # Only process .jsonl.zst files
+            if filename.endswith(".jsonl.zst"):  # 只处理.jsonl.zst文件
                 in_file = os.path.join(input_dir, filename)
                 print(f"Processing: {in_file}")
 
-                processed_lines = 0  # Counter for processed lines in the current file
+                processed_lines = 0  # 当前文件中已处理行的计数器
 
-                # Open the compressed .jsonl.zst file for reading
+                # 打开压缩的.jsonl.zst文件进行读取
                 with zstd.open(in_file, 'rt', encoding='utf-8') as in_f:
-                    # Iterate over each line in the file
+                    # 遍历文件中的每一行
                     for line in tqdm(in_f, desc=f"Processing {filename}", total=max_data if max_data is not None else None):
                         try:
-                            # Parse the line as JSON
+                            # 将行解析为JSON
                             data = json.loads(line)
                             text = data.get('text')  # Extract the 'text' field from the JSON object
 

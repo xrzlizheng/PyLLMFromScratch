@@ -5,28 +5,28 @@ from src.models.transformer_block import Block
 
 class Transformer(nn.Module):
     """
-    The main Transformer model.
+    主要的Transformer模型。
 
-    This class combines token and position embeddings with a sequence of Transformer blocks
-    and a final linear layer for language modeling.
+    该类将token和position embeddings与一系列Transformer块结合，
+    并使用最后的线性层进行语言建模。
 
-    Args:
-        n_head (int): The number of attention heads in each transformer block.
-        n_embed (int): The dimensionality of the embedding space.
-        context_length (int): The maximum length of the input sequence.
-        vocab_size (int): The size of the vocabulary.
-        N_BLOCKS (int): The number of transformer blocks in the model.
+    参数:
+        n_head (int): 每个transformer块中的注意力头数量。
+        n_embed (int): 嵌入空间的维度。
+        context_length (int): 输入序列的最大长度。
+        vocab_size (int): 词汇表大小。
+        N_BLOCKS (int): 模型中transformer块的数量。
     """
     def __init__(self, n_head: int, n_embed: int, context_length: int, vocab_size: int, N_BLOCKS: int) -> None:
         """
-        Initializes the Transformer model.
+        初始化Transformer模型。
 
-        Args:
-            n_head (int): Number of attention heads.
-            n_embed (int): Embedding dimension.
-            context_length (int): Maximum sequence length.
-            vocab_size (int): Size of the vocabulary.
-            N_BLOCKS (int): Number of transformer blocks.
+        参数:
+            n_head (int): 注意力头数量。
+            n_embed (int): 嵌入维度。
+            context_length (int): 最大序列长度。
+            vocab_size (int): 词汇表大小。
+            N_BLOCKS (int): transformer块数量。
         """
         super().__init__()
         self.context_length = context_length
@@ -40,13 +40,13 @@ class Transformer(nn.Module):
 
     def _pre_attn_pass(self, idx: torch.Tensor) -> torch.Tensor:
         """
-        Combines token and position embeddings.
+        结合token和position embeddings。
 
-        Args:
-            idx (torch.Tensor): Input token indices.
+        参数:
+            idx (torch.Tensor): 输入的token索引。
 
-        Returns:
-            torch.Tensor: Sum of token and position embeddings.
+        返回:
+            torch.Tensor: token和position embeddings的和。
         """
         B, T = idx.shape
         tok_embedding = self.token_embed(idx)
@@ -55,14 +55,14 @@ class Transformer(nn.Module):
 
     def forward(self, idx: torch.Tensor, targets: torch.Tensor = None) -> tuple[torch.Tensor, torch.Tensor | None]:
         """
-        Forward pass through the Transformer.
+        Transformer的前向传播。
 
-        Args:
-            idx (torch.Tensor): Input token indices.
-            targets (torch.Tensor, optional): Target token indices for loss calculation. Defaults to None.
+        参数:
+            idx (torch.Tensor): 输入的token索引。
+            targets (torch.Tensor, 可选): 用于计算loss的目标token索引。默认为None。
 
-        Returns:
-            tuple: Logits and loss (if targets are provided).
+        返回:
+            tuple: Logits和loss（如果提供了targets）。
         """
         x = self._pre_attn_pass(idx)
         for block in self.attn_blocks:
@@ -79,13 +79,13 @@ class Transformer(nn.Module):
 
     def forward_embedding(self, idx: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         """
-        Forward pass focusing on the embedding and attention blocks.
+        专注于embedding和attention块的前向传播。
 
-        Args:
-            idx (torch.Tensor): Input token indices.
+        参数:
+            idx (torch.Tensor): 输入的token索引。
 
-        Returns:
-            tuple: Output after attention blocks and the residual.
+        返回:
+            tuple: 经过attention块后的输出和残差。
         """
         x = self._pre_attn_pass(idx)
         residual = x
@@ -95,14 +95,14 @@ class Transformer(nn.Module):
 
     def generate(self, idx: torch.Tensor, max_new_tokens: int) -> torch.Tensor:
         """
-        Generates new tokens given a starting sequence.
+        给定初始序列生成新的tokens。
 
-        Args:
-            idx (torch.Tensor): Initial sequence of token indices.
-            max_new_tokens (int): Number of tokens to generate.
+        参数:
+            idx (torch.Tensor): 初始的token索引序列。
+            max_new_tokens (int): 要生成的token数量。
 
-        Returns:
-            torch.Tensor: The extended sequence of tokens.
+        返回:
+            torch.Tensor: 扩展后的token序列。
         """
         for _ in range(max_new_tokens):
             idx_cond = idx[:, -self.context_length:]
