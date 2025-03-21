@@ -1,5 +1,5 @@
 # 用python一步步从零开始训练LLM
-具体见
+具体见[博客](https://lizheng.blog.csdn.net/article/details/146412880)
 
 ## 训练数据信息
 
