@@ -5,47 +5,6 @@
 <!-- omit in toc -->
 # Train LLM From Scratch
   
-![Python](https://img.shields.io/badge/Python-3.8%2B-blue) ![License](https://img.shields.io/badge/License-MIT-green) ![Contributions](https://img.shields.io/badge/Contributions-Welcome-blue) [![Docs](https://img.shields.io/badge/Docs-Available-success)](#step-by-step-code-explanation)
-
-**I am Looking for a PhD position in AI**. Take a look at my [Resume](https://drive.google.com/file/d/1Q_iklJ1RVGSb-Pdey8BHy3k8IF3UJv0z/view?usp=sharing) or [GitHub](https://github.com/FareedKhan-dev)
-
-</div>
-
-I implemented a transformer model from scratch using PyTorch, based on the paper [Attention is All You Need](https://arxiv.org/abs/1706.03762). You can use my scripts to train your own **billion** or **million** parameter LLM using a single GPU.
-
-Below is the output of the trained 13 million parameter LLM:
-
-```
-In ***1978, The park was returned to the factory-plate that 
-the public share to the lower of the electronic fence that 
-follow from the Station's cities. The Canal of ancient Western 
-nations were confined to the city spot. The villages were directly 
-linked to cities in China that revolt that the US budget and in
-Odambinais is uncertain and fortune established in rural areas.
-```
-<!-- omit in toc -->
-## Table of Contents
-- [Training Data Info](#training-data-info)
-- [Prerequisites and Training Time](#prerequisites-and-training-time)
-- [Code Structure](#code-structure)
-- [Usage](#usage)
-- [Step by Step Code Explanation](#step-by-step-code-explanation)
-  - [Importing Libraries](#importing-libraries)
-  - [Preparing the Training Data](#preparing-the-training-data)
-  - [Transformer Overview](#transformer-overview)
-  - [Multi Layer Perceptron (MLP)](#multi-layer-perceptron-mlp)
-  - [Single Head Attention](#single-head-attention)
-  - [Multi Head Attention](#multi-head-attention)
-  - [Transformer Block](#transformer-block)
-  - [The Final Model](#the-final-model)
-  - [Batch Processing](#batch-processing)
-  - [Training Parameters](#training-parameters)
-  - [Training the Model](#training-the-model)
-  - [Saving the Trained Model](#saving-the-trained-model)
-  - [Training Loss](#training-loss)
-  - [Generating Text](#generating-text)
-- [What’s Next](#whats-next)
-
 ## Training Data Info
 
 Training data is from the Pile dataset, which is a diverse, open-source, and large-scale dataset for training language models. The Pile dataset is a collection of 22 diverse datasets, including text from books, articles, websites, and more. The total size of the Pile dataset is 825GB, Below is the sample of the training data:
@@ -127,7 +86,7 @@ train-llm-from-scratch/
 
 Clone the repository and navigate to the directory:
 ```bash
-git clone https://github.com/FareedKhan-dev/train-llm-from-scratch.git
+git clone https://github.com/xrzlizheng/train-llm-from-scratch.git
 cd train-llm-from-scratch
 ```
 
@@ -1216,8 +1175,5 @@ I recommend that you create the 13+ million-parameter model and then start scali
 
 <hr>
 
-Wanna chat on something? [My Linkedin](https://www.linkedin.com/in/fareed-khan-dev/)
 
-## Star History
 
-[![](https://api.star-history.com/svg?repos=FareedKhan-dev/train-llm-from-scratch&type=Date)](https://star-history.com/#FareedKhan-dev/train-llm-from-scratch&Date)
