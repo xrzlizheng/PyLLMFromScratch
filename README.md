@@ -1,7 +1,5 @@
-![主图](https://cdn-images-1.medium.com/max/5200/1*r99Hq3YBd5FTTWLNYKKvPw.png)
-
-# 从零开始训练LLM
-具体见
+# 用python一步步从零开始训练LLM
+具体见[博客](https://lizheng.blog.csdn.net/article/details/146412880)
 
 ## 训练数据信息
 
@@ -133,4 +131,9 @@ python scripts/generate_text.py --model_path models/your_model.pth --input_text 
 
 ---
 
-Thanks:![train-llm-from-scratch](https://github.com/FareedKhan-dev/train-llm-from-scratch)
+## 参考
+
+- [train-llm-from-scratch](https://github.com/FareedKhan-dev/train-llm-from-scratch)
+- [The Pile Dataset](https://pile.eleuther.ai/)
+- [PyTorch Documentation](https://pytorch.org/docs/stable/index.html)
+- [OpenAI's tiktoken](https://github.com/openai/tiktoken)
