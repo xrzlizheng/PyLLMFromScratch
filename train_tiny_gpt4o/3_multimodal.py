@@ -64,11 +64,6 @@ print(f"  Loaded block_size: {loaded_block_size}")
 
 
 
-print("\"""
-端到端多模态Transformer实现(内联)
-
-简介：扩展Transformer用于视觉和语言处理
-"""nStep 0.3: Defining special tokens and updating vocabulary...")
 
 # --- Define Special Tokens ---
 img_token = "<IMG>"
@@ -76,9 +71,6 @@ pad_token = "<PAD>"
 eos_token = "<EOS>" # End-of-Sentence/Sequence
 special_tokens = [img_token, pad_token, eos_token]
 
-# --- Add Special Tokens to Vocabulary ---
-# Theory: Integrate the new special tokens into the existing character mappings.
-# We assign new unique integer IDs to them. The vocab_size increases.
 current_vocab_size = loaded_vocab_size
 for token in special_tokens:
     if token not in char_to_int:
@@ -93,21 +85,6 @@ pad_token_id = char_to_int[pad_token] # Store the ID for later use
 print(f"Added special tokens: {special_tokens}")
 print(f"Updated vocabulary size: {vocab_size}")
 print(f"PAD token ID: {pad_token_id}")
-# print(f"Updated char_to_int mapping includes: { {k: char_to_int[k] for k in special_tokens} }")
-
-
-# #### Step 0.4: Define Sample Multi-Modal Data
-# 
-# **Theory:** Create a small, synthetic dataset of (image, prompt, response) triplets. For simplicity, we'll generate dummy images (e.g., solid colors) using PIL/Numpy and pair them with descriptive prompts and answers. In a real scenario, this would be a large dataset like COCO Captions, VQAv2, etc.
-
-
-
-
-print("\"""
-端到端多模态Transformer实现(内联)
-
-简介：扩展Transformer用于视觉和语言处理
-"""nStep 0.4: Defining sample multi-modal data...")
 
 
 sample_data_dir = "sample_multimodal_data"
@@ -161,9 +138,6 @@ print(f"  Vision model set to evaluation mode on device: {device}")
 
 
 
-# --- Define Standard ImageNet Transforms ---
-# Theory: Use the standard transformations recommended for models pre-trained on ImageNet.
-# Resize, Center Crop (optional but common), ToTensor, Normalize.
 image_transforms = transforms.Compose([
     transforms.Resize(256),            # Resize smaller edge to 256
     transforms.CenterCrop(224),        # Crop center 224x224 square
