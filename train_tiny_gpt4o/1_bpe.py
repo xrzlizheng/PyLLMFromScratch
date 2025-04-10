@@ -4,6 +4,7 @@
 @Author: lizheng
 @Date: 2025-04-02
 @Description: https://lizheng.blog.csdn.net/article/details/147091139?spm=1011.2415.3001.5331
+具体可以查看博文https://blog.csdn.net/qq_36603091/article/details/147093831?spm=1001.2014.3001.5501
 """
 import re 
 import collections
@@ -299,12 +300,11 @@ print(f"Input Text: '{new_text_to_tokenize}'")
 
 
 print("Step 4.2: Preprocessing the new text...")
-# 1. Lowercase the new text
+
 new_text_lower = new_text_to_tokenize.lower()
 print(f"  Lowercased: '{new_text_lower}'")
 
-# 2. Split into words/tokens using the same regex as in training
-# Recall: split_pattern = r'\w+|[^\s\w]+'
+
 new_words_list = re.findall(split_pattern, new_text_lower)
 print(f"  Split into words/tokens: {new_words_list}")
 
@@ -330,14 +330,11 @@ for word in new_words_list:
 
     print("    Step 4.6: Applying learned merges iteratively...")
     while True: # Loop until no more merges can be applied to this word
-        # --- Find the best merge for the CURRENT pass --- 
-        # Initialize variables to track the best merge found *in this pass*
-        best_priority_found_this_pass = float('inf') # Use infinity to ensure any valid priority is lower
+        best_priority_found_this_pass = float('inf') 
         pair_to_merge_this_pass = None
         merge_location_this_pass = -1
         
-        # Scan through the current word_symbols list to find applicable merges
-        # Iterate up to the second-to-last symbol to form pairs
+
         scan_index = 0
         while scan_index < len(word_symbols) - 1:
             # Form the adjacent pair at the current scan index
@@ -358,8 +355,7 @@ for word in new_words_list:
             # Move to the next position to check the next pair
             scan_index += 1
             
-        # --- Apply the best merge found (if any) or break --- 
-        # After scanning the entire current word_symbols list:
+
         if pair_to_merge_this_pass is not None:
             # An applicable merge was found. Apply the one with the highest priority.
             merged_symbol = "".join(pair_to_merge_this_pass)
