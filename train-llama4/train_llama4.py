@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+# coding: utf-8
+"""
+@Author: lizheng
+@Date: 2025-04-15
+@Description: https://blog.csdn.net/qq_36603091/article/details/147288188
+具体可以查看博文https://blog.csdn.net/qq_36603091/article/details/147288188
+"""
 # 导入必要的库
 import torch
 import torch.nn as nn
